@@ -1,0 +1,45 @@
+server:
+  port: 8500
+
+spring:
+  datasource:
+    url: jdbc:mariadb://158.180.75.120:3306/ACCOUNT_MANAGE
+    driver-class-name: org.mariadb.jdbc.Driver
+    username: ADMINUSER
+    password: ADMINUSER
+    hikari:
+      maximum-pool-size: 50
+      minimum-idle: 5
+      max-lifetime: 1800000 #30min
+      idle-timeout: 600000 #10min
+  messages:
+    basename: messages
+    encoding: UTF-8
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop  # option type: create, create-drop, update, validate, none
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    properties:
+      hibernate:
+        show_sql: true  # sql ??? ?????.
+        format_sql: true  # sql query formatting
+        use_sql_comments: true  # sql ??? ????? ?????.
+
+logging:
+  level:
+    org:
+      hibernate:
+        type:
+          descriptor:
+            sql: trace  # query? ?? ?? ?? ????? ??? ? ?? ?????. TRACE Log? ?? ?????.
+
+
+file:
+  dir: 'C:\servFile'
+
+
+jwt:
+  expiration_time: 86400000 #1일
+  secret: VlwEyVBsYt9V7zq57TejMnVUyzblYcfPQye08f7MGVA9XkHaasdfasfsefawefawefawefawefawefawefawefawe432432fe2362623342
