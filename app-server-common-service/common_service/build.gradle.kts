@@ -94,6 +94,8 @@ tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
 }
 
+
+
 // 소스 세트에 QueryDSL Q클래스 위치 추가
 sourceSets {
     main {
@@ -106,4 +108,18 @@ sourceSets {
 // clean 태스크 실행 시 생성된 Q클래스 삭제
 tasks.clean {
     delete(file(generated))
+}
+
+tasks.register<Copy>("copyJar") {
+    from("build/libs")  // 현재 프로젝트의 빌드된 JAR 파일 위치
+    val destinations = listOf(
+        "../../app-server-account-manage/account_manage/lib", // 서비스 모듈 추가되면 추가
+    )
+    destinations.forEach { dest ->
+        into(dest) { include("*.jar") }  // 각 경로에 복사
+    }
+}
+
+tasks.named("build") {
+    finalizedBy("copyJar")  // build 후 자동 실행
 }
