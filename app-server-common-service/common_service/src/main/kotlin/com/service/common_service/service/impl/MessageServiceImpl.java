@@ -1,6 +1,5 @@
 package com.service.common_service.service.impl;
 
-import com.prod.pms.api.common.service.MessageService;
 import com.service.common_service.service.MessageService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;

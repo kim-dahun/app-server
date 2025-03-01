@@ -1,6 +1,5 @@
 package com.service.common_service.service;
 
-import com.prod.pms.api.common.vo.CmnResponseVo;
 import com.service.common_service.vo.response.CmnResponseVo;
 
 public interface ResponseService {
