@@ -1,0 +1,107 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.4.3'
+    id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'com.service'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-graphql'
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    compileOnly 'org.projectlombok:lombok'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework:spring-webflux'
+    testImplementation 'org.springframework.graphql:spring-graphql-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    //Jwt
+    implementation("io.jsonwebtoken:jjwt-api:0.11.5")
+    implementation("io.jsonwebtoken:jjwt-impl:0.11.5")
+    implementation("io.jsonwebtoken:jjwt-jackson:0.11.5")
+
+    // queryDSL
+    implementation("com.querydsl:querydsl-jpa:5.0.0:jakarta")
+    annotationProcessor("com.querydsl:querydsl-apt:5.0.0:jakarta")
+    annotationProcessor("jakarta.annotation:jakarta.annotation-api")
+    annotationProcessor("jakarta.persistence:jakarta.persistence-api")
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+def generated = 'src/main/generated'
+
+// querydsl QClass 파일 생성 위치를 지정
+tasks.withType(JavaCompile).configureEach {
+    options.getGeneratedSourceOutputDirectory().set(file(generated))
+    options.encoding = "UTF-8"
+}
+
+// java source set 에 querydsl QClass 위치 추가
+sourceSets {
+    main.java.srcDirs += [generated]
+}
+
+// gradle clean 시에 QClass 디렉토리 삭제
+clean {
+    delete file(generated)
+}
+
+bootJar {
+    enabled = false
+}
+
+jar {
+    enabled = true
+    // 의존성을 포함하도록 설정
+//    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+//
+//    // 모든 컴파일 의존성 포함
+//    from {
+//        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+//    }
+}
+
+// JAR 파일 복사 task 정의
+tasks.register('copyJarToDeployment', Copy) {
+    def destinations = [
+            "../../account-manage/account-manage/lib"
+    ]
+
+    // 각 대상 디렉토리 존재 확인 및 생성
+    destinations.forEach { dest ->
+        from(file("build/libs")) // 복사할 JAR 파일이 있는 폴더 (현재 프로젝트 기준)
+        into(file(dest)) // 복사할 상대경로 폴더
+        include("*.jar") // JAR 파일만 복사하도록 필터링
+        DuplicatesStrategy.EXCLUDE
+    }
+
+
+}
+
+// build task가 완료된 후 자동으로 copyJarToDeployment task가 실행되도록 설정
+build.finalizedBy(copyJarToDeployment)
