@@ -1,11 +1,12 @@
 package com.service.account_manage.entity
 
+import com.service.common_service.entity.CmnBaseCUDEntity
 import jakarta.persistence.*
 import java.time.LocalDateTime
 
 @Entity
 @Table(name = "INCOME_EXPENDITURE_LIST")
-class AccountManager {
+class AccountManager:CmnBaseCUDEntity() {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,18 +18,6 @@ class AccountManager {
 
     @Column(name = "AMOUNT")
     var amount : Double = 0.0;
-
-    @Column(name = "USE_YN", length = 1)
-    var useYn : String = "Y";
-
-    @Column(name = "DELETE_DATE")
-    var deleteDate : LocalDateTime? = null;
-
-    @Column(name = "CREATE_DATE")
-    var createDate : LocalDateTime? = LocalDateTime.now();
-
-    @Column(name = "UPDATE_DATE")
-    var updateDate : LocalDateTime? = LocalDateTime.now();
 
     @Column(name = "TYPE", length = 10)
     var type : String? = null;
