@@ -7,7 +7,6 @@ import lombok.*;
 @Entity
 @Table(name = "INCOME_EXPENDITURE_LIST")
 @Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder

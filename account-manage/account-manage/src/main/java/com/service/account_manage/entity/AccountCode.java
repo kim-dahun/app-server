@@ -12,7 +12,6 @@ import java.util.List;
 @Table(name = "ACCOUNT_CODE_MASTER")
 @IdClass(AccountCodeId.class)
 @Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -30,8 +29,11 @@ public class AccountCode extends CmnBaseCUDEntity {
     @Column(name = "CODE_DESC", length = 40)
     private String codeDesc;
 
-    @OneToMany(mappedBy = "accountCode", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "accountCode", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.LAZY)
     private List<AccountCodeDetail> accountCodeDetailList = new ArrayList<>();
 
+    public void updateCodeDesc(String codeDesc){
+        this.codeDesc = codeDesc;
+    }
 
 }

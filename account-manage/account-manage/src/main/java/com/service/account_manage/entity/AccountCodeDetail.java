@@ -9,7 +9,6 @@ import lombok.*;
 @Table(name = "ACCOUNT_CODE_DETAIL")
 @IdClass(AccountCodeDetailId.class)
 @Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -27,7 +26,6 @@ public class AccountCodeDetail extends CmnBaseCUDEntity {
     @Column(name = "CODE_GROUP", length = 20, nullable = false)
     private String codeGroup;
 
-
     @Column(name = "CODE_DESC", length = 40)
     private String codeDesc;
 
@@ -43,5 +41,20 @@ public class AccountCodeDetail extends CmnBaseCUDEntity {
             @JoinColumn(name = "CODE_GROUP", referencedColumnName = "CODE_ID", nullable = false)
     })
     private AccountCode accountCode;
+
+    public void createCodeId(){
+        if(this.codeId == null){
+            this.codeId = this.codeGroup + "_" + this.codeId;
+        }
+    }
+
+    public void updateParentCode(String parentCode, Integer level){
+        this.parentCode = parentCode;
+        this.level = level;
+    }
+
+    public void updateCodeDesc(String codeDesc){
+        this.codeDesc = codeDesc;
+    }
 
 }
