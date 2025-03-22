@@ -23,7 +23,6 @@ public class ResponseServiceImpl implements ResponseService {
         CmnResponseVo cmnResponseVo = new CmnResponseVo();
         cmnResponseVo.setStatusCode(HttpStatus.UNAUTHORIZED);
         cmnResponseVo.setMessage(messageService.getMessage(langCode,null, FAIL_LOGIN));
-        cmnResponseVo.setResultData(null);
         return cmnResponseVo;
     }
 
@@ -41,7 +40,6 @@ public class ResponseServiceImpl implements ResponseService {
         return CmnResponseVo.builder()
                 .message(messageService.getMessage(KO,null,CREATE_ACCOUNT_FAIL))
                 .statusCode(HttpStatus.INTERNAL_SERVER_ERROR)
-                .resultData(null)
                 .build();
     }
 

@@ -2,9 +2,9 @@ package com.service.core.constants;
 
 public class CommonConstants {
 
-    public static final String CREATE = "CREATE";
+    public static final String CREATE = "C";
 
-    public static final String UPDATE = "UPDATE";
+    public static final String UPDATE = "U";
 
-    public static final String DELETE = "DELETE";
+    public static final String DELETE = "D";
 }

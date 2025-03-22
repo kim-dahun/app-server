@@ -1,17 +1,24 @@
 package com.service.core.vo.response;
 
+import jakarta.persistence.MappedSuperclass;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
+
+import java.util.List;
+import java.util.Map;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
 @Getter
-@Builder
+@SuperBuilder
 public class CmnResponseVo {
 
     private Object statusCode;
     private String message;
-    private Object resultData;
+    private Object commonResultData;
+    private List commonResultList;
+    private Map commonResultMap;
     private String etc;
 
 

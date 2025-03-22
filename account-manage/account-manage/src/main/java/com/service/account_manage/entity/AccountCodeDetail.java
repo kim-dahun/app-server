@@ -4,6 +4,7 @@ import com.service.account_manage.entity.id.AccountCodeDetailId;
 import com.service.core.entity.CmnBaseCUDEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.DynamicUpdate;
 
 @Entity
 @Table(name = "ACCOUNT_CODE_DETAIL")
@@ -34,6 +35,9 @@ public class AccountCodeDetail extends CmnBaseCUDEntity {
 
     @Column(name = "CODE_LEVEL")
     private Integer level;
+
+    @Column(name = "SORT_SEQ")
+    private Integer sortSeq;
 
     @ManyToOne
     @JoinColumns({

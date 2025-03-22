@@ -3,6 +3,7 @@ package com.service.account_manage.entity;
 import com.service.core.entity.CmnBaseCUDEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.DynamicUpdate;
 
 @Entity
 @Table(name = "INCOME_EXPENDITURE_LIST")
@@ -10,6 +11,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@DynamicUpdate
 public class AccountManager extends CmnBaseCUDEntity {
 
     @Id
@@ -34,5 +36,35 @@ public class AccountManager extends CmnBaseCUDEntity {
 
     @Column(name = "REMARK", length = 200)
     private String remark;
+
+    // 거래 금액 수정
+    public void changeAmount(Double amount) {
+        this.amount = amount;
+    }
+
+    // 거래 유형 변경
+    public void changeTransactionType(String type, String tradeType) {
+        this.type = type;
+        this.tradeType = tradeType;
+    }
+
+    // 계좌 정보 변경
+    public void changeAccountInfo(String accountCode) {
+        this.accountCode = accountCode;
+    }
+
+    // 비고 수정
+    public void updateRemark(String remark) {
+        this.remark = remark;
+    }
+
+    // 전체 거래 정보 수정이 필요한 경우를 위한 메서드
+    public void updateTransaction(Double amount, String type, String tradeType, String accountCode, String remark) {
+        this.amount = amount;
+        this.type = type;
+        this.tradeType = tradeType;
+        this.accountCode = accountCode;
+        this.remark = remark;
+    }
 
 }

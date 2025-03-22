@@ -42,6 +42,8 @@ public class QAccountCodeDetail extends EntityPathBase<AccountCodeDetail> {
 
     public final StringPath parentCode = createString("parentCode");
 
+    public final NumberPath<Integer> sortSeq = createNumber("sortSeq", Integer.class);
+
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updateDate = _super.updateDate;
 

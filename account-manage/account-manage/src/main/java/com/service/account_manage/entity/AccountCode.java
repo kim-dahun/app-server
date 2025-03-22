@@ -4,6 +4,7 @@ import com.service.account_manage.entity.id.AccountCodeId;
 import com.service.core.entity.CmnBaseCUDEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.DynamicUpdate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +29,9 @@ public class AccountCode extends CmnBaseCUDEntity {
 
     @Column(name = "CODE_DESC", length = 40)
     private String codeDesc;
+
+    @Column(name = "SORT_SEQ")
+    private Integer sortSeq;
 
     @OneToMany(mappedBy = "accountCode", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.LAZY)
     private List<AccountCodeDetail> accountCodeDetailList = new ArrayList<>();
