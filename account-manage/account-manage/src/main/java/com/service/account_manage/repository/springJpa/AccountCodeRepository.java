@@ -9,5 +9,5 @@ import java.util.List;
 public interface AccountCodeRepository extends JpaRepository<AccountCode, AccountCodeId> {
 
 
-    List<AccountCode> findByCodeIdIn(List<String> codeIds);
+    List<AccountCode> findByCodeIdInAndUserId(List<String> codeIds, String userId);
 }

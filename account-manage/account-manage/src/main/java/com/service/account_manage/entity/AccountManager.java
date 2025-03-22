@@ -32,7 +32,7 @@ public class AccountManager extends CmnBaseCUDEntity {
     private String tradeType;
 
     @Column(name = "ACCOUNT_CODE", length = 20)
-    private String accountCode;
+    private String codeId;
 
     @Column(name = "REMARK", length = 200)
     private String remark;
@@ -48,9 +48,9 @@ public class AccountManager extends CmnBaseCUDEntity {
         this.tradeType = tradeType;
     }
 
-    // 계좌 정보 변경
-    public void changeAccountInfo(String accountCode) {
-        this.accountCode = accountCode;
+    // 장부 코드 정보 변경
+    public void changeAccountInfo(String codeId) {
+        this.codeId = codeId;
     }
 
     // 비고 수정
@@ -59,11 +59,11 @@ public class AccountManager extends CmnBaseCUDEntity {
     }
 
     // 전체 거래 정보 수정이 필요한 경우를 위한 메서드
-    public void updateTransaction(Double amount, String type, String tradeType, String accountCode, String remark) {
+    public void updateTransaction(Double amount, String type, String tradeType, String codeId, String remark) {
         this.amount = amount;
         this.type = type;
         this.tradeType = tradeType;
-        this.accountCode = accountCode;
+        this.codeId = codeId;
         this.remark = remark;
     }
 

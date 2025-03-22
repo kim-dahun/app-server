@@ -1,6 +1,7 @@
 package com.service.account_manage.api.accoun_code.vo.response;
 
 import com.service.account_manage.api.accoun_code.vo.data.AccountCodeDetailVo;
+import com.service.core.vo.response.CmnResponseVo;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,7 +15,7 @@ import java.util.List;
 @SuperBuilder
 @Setter
 @Getter
-public class ResponseAccountCodeDetailVo {
+public class ResponseAccountCodeDetailVo extends CmnResponseVo {
 
     private List<AccountCodeDetailVo> dataList;
 

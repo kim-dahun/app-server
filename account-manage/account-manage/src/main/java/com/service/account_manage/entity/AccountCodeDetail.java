@@ -46,9 +46,9 @@ public class AccountCodeDetail extends CmnBaseCUDEntity {
     })
     private AccountCode accountCode;
 
-    public void createCodeId(){
+    public void createCodeId(String codeId){
         if(this.codeId == null){
-            this.codeId = this.codeGroup + "_" + this.codeId;
+            this.codeId = this.codeGroup + "_" + codeId;
         }
     }
 

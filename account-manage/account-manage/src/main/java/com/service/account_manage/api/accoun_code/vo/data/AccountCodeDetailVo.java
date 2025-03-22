@@ -20,7 +20,7 @@ public class AccountCodeDetailVo extends AccountCodeVo{
     private String codeGroup;
     private Integer level;
     private Integer sortSeq;
-    private List<AccountCodeDetail> childList;
+    private List<AccountCodeDetailVo> childList;
 
     public AccountCodeDetail toAccountCodeDetailEntity(){
         return AccountCodeDetail.builder()

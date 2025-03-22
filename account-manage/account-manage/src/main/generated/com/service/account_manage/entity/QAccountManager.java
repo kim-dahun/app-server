@@ -21,9 +21,9 @@ public class QAccountManager extends EntityPathBase<AccountManager> {
 
     public final com.service.core.entity.QCmnBaseCUDEntity _super = new com.service.core.entity.QCmnBaseCUDEntity(this);
 
-    public final StringPath accountCode = createString("accountCode");
-
     public final NumberPath<Double> amount = createNumber("amount", Double.class);
+
+    public final StringPath codeId = createString("codeId");
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createDate = _super.createDate;

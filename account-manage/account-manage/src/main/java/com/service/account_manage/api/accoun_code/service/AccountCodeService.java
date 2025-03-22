@@ -31,4 +31,6 @@ public interface AccountCodeService {
 
     Boolean isAvailableDelete(AccountCodeDetailVo accountCodeVo);
 
+    ResponseEntity<CmnResponseVo> selectAccountCodeDetailTree(RequestAccountCodeDetailVo accountCodeDetailVo);
+
 }

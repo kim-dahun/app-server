@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface AccountManagerRepository extends JpaRepository<AccountManager, Long> {
-    Boolean existsByAccountCodeAndUserId(String codeId, String userId);
+    Boolean existsByCodeIdAndUserId(String codeId, String userId);
 
-    boolean existsByAccountCodesAndUserId(List<String> codeIds, String userId);
+    boolean existsByCodeIdInAndUserId(List<String> codeIds, String userId);
 }
