@@ -18,7 +18,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: none  # option type: create, create-drop, update, validate, none
+      ddl-auto: update  # option type: create, create-drop, update, validate, none
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     properties:
@@ -34,3 +34,12 @@ logging:
         type:
           descriptor:
             sql: debug  # query? ?? ?? ?? ????? ??? ? ?? ?????. TRACE Log? ?? ?????.
+
+
+file:
+  dir: ${fileDir}
+
+
+jwt:
+  expiration_time: 86400000 #1일
+  secret: ${jwtSecret}

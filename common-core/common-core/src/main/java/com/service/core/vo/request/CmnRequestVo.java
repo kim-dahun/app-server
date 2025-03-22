@@ -16,6 +16,7 @@ public class CmnRequestVo {
     private String crudFlag;
 
     private String requestId;
+    private String requestComCd;
 
     private Integer pageNum;
     private Integer pageSize;

@@ -16,11 +16,10 @@ import java.util.List;
 @Setter
 public class AccountCodeDetailVo extends AccountCodeVo{
 
-    private String parentCode;
-    private String codeGroup;
-    private Integer level;
-    private Integer sortSeq;
-    private List<AccountCodeDetailVo> childList;
+    protected String parentCode;
+    protected String codeGroup;
+    protected Integer level;
+    protected List<AccountCodeDetailVo> childList;
 
     public AccountCodeDetail toAccountCodeDetailEntity(){
         return AccountCodeDetail.builder()
@@ -31,6 +30,7 @@ public class AccountCodeDetailVo extends AccountCodeVo{
                 .codeGroup(codeGroup)
                 .level(level)
                 .sortSeq(sortSeq)
+                .comCd(comCd)
                 .build();
     }
 
@@ -43,6 +43,7 @@ public class AccountCodeDetailVo extends AccountCodeVo{
                 .codeGroup(accountCodeDetail.getCodeGroup())
                 .level(accountCodeDetail.getLevel())
                 .sortSeq(accountCodeDetail.getSortSeq())
+                .comCd(accountCodeDetail.getComCd())
                 .build();
     }
 

@@ -32,6 +32,8 @@ public class QAccountCodeDetail extends EntityPathBase<AccountCodeDetail> {
 
     public final StringPath codeId = createString("codeId");
 
+    public final StringPath comCd = createString("comCd");
+
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createDate = _super.createDate;
 

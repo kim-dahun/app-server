@@ -27,6 +27,10 @@ public class AccountCode extends CmnBaseCUDEntity {
     @Column(name = "CODE_ID", length = 20)
     private String codeId;
 
+    @Id
+    @Column(name = "COM_CD", length = 40)
+    private String comCd;
+
     @Column(name = "CODE_DESC", length = 40)
     private String codeDesc;
 

@@ -21,6 +21,8 @@ public class QAccountCodeId extends BeanPath<AccountCodeId> {
 
     public final StringPath codeId = createString("codeId");
 
+    public final StringPath comCd = createString("comCd");
+
     public final StringPath userId = createString("userId");
 
     public QAccountCodeId(String variable) {

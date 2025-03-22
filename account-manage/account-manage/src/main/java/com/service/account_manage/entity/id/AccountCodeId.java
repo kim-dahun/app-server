@@ -13,23 +13,12 @@ import java.util.Objects;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@EqualsAndHashCode
 public class AccountCodeId implements Serializable {
 
     private String userId;
 
     private String codeId;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        AccountCodeId that = (AccountCodeId) o;
-        return Objects.equals(userId, that.userId) &&
-                Objects.equals(codeId, that.codeId);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(userId, codeId);
-    }
+    private String comCd;
 }

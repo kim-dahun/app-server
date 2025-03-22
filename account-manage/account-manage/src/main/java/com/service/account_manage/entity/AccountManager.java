@@ -1,5 +1,6 @@
 package com.service.account_manage.entity;
 
+import com.service.account_manage.entity.id.AccountManagerId;
 import com.service.core.entity.CmnBaseCUDEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -11,16 +12,24 @@ import org.hibernate.annotations.DynamicUpdate;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@IdClass(AccountManagerId.class)
 @DynamicUpdate
 public class AccountManager extends CmnBaseCUDEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "TRANSACTION_ID")
-    private Long id;
+    @Column(name = "TRANSACTION_ID", length = 40)
+    private String transactionId;
 
-    @Column(name = "USER_ID", length = 40)
+    @Id
+    @Column(name = "COM_CD", length = 40)
+    private String comCd;
+
+    @Id
+    @Column(name = "USER_ID", length = 20)
     private String userId;
+
+    @Column(name = "TRADE_CODE",length = 20)
+    private String tradeCode;
 
     @Column(name = "AMOUNT")
     private Double amount = 0.0;
@@ -37,13 +46,16 @@ public class AccountManager extends CmnBaseCUDEntity {
     @Column(name = "REMARK", length = 200)
     private String remark;
 
+    @Column(name = "TRANSACTION_DATE", length = 20)
+    private String transactionDate;
+
     // 거래 금액 수정
     public void changeAmount(Double amount) {
         this.amount = amount;
     }
 
     // 거래 유형 변경
-    public void changeTransactionType(String type, String tradeType) {
+    public void changeTradeType(String type, String tradeType) {
         this.type = type;
         this.tradeType = tradeType;
     }
@@ -58,13 +70,20 @@ public class AccountManager extends CmnBaseCUDEntity {
         this.remark = remark;
     }
 
+
+    public void changeTransactionDate(String transactionDate){
+        this.transactionDate = transactionDate;
+    }
+
+
     // 전체 거래 정보 수정이 필요한 경우를 위한 메서드
-    public void updateTransaction(Double amount, String type, String tradeType, String codeId, String remark) {
+    public void updateTransaction(Double amount, String type, String tradeType, String codeId, String remark, String transactionDate) {
         this.amount = amount;
         this.type = type;
         this.tradeType = tradeType;
         this.codeId = codeId;
         this.remark = remark;
+        this.transactionDate = transactionDate;
     }
 
 }

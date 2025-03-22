@@ -21,10 +21,11 @@ public class AccountCodeVo {
     protected String codeDesc;
     protected String userId;
     protected String useYn;
-    private Integer sortSeq;
+    protected Integer sortSeq;
     protected LocalDateTime createDate;
     protected LocalDateTime updateDate;
     protected LocalDateTime deleteDate;
+    protected String comCd;
 
     public AccountCode toAccountCodeEntity() {
         return AccountCode.builder()
@@ -32,6 +33,7 @@ public class AccountCodeVo {
                 .codeDesc(codeDesc)
                 .userId(userId)
                 .sortSeq(sortSeq)
+                .comCd(comCd)
                 .build();
     }
 
@@ -41,6 +43,7 @@ public class AccountCodeVo {
                 .codeDesc(accountCode.getCodeDesc())
                 .userId(accountCode.getUserId())
                 .sortSeq(accountCode.getSortSeq())
+                .comCd(accountCode.getComCd())
                 .build();
     }
 

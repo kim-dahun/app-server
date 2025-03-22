@@ -25,17 +25,23 @@ public class QAccountManager extends EntityPathBase<AccountManager> {
 
     public final StringPath codeId = createString("codeId");
 
+    public final StringPath comCd = createString("comCd");
+
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createDate = _super.createDate;
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> deleteDate = _super.deleteDate;
 
-    public final NumberPath<Long> id = createNumber("id", Long.class);
-
     public final StringPath remark = createString("remark");
 
+    public final StringPath tradeCode = createString("tradeCode");
+
     public final StringPath tradeType = createString("tradeType");
+
+    public final StringPath transactionDate = createString("transactionDate");
+
+    public final StringPath transactionId = createString("transactionId");
 
     public final StringPath type = createString("type");
 

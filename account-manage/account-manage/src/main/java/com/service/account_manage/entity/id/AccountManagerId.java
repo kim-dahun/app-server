@@ -1,11 +1,9 @@
 package com.service.account_manage.entity.id;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.*;
 
 import java.io.Serializable;
-import java.util.Objects;
 
 @Embeddable
 @Getter
@@ -14,14 +12,12 @@ import java.util.Objects;
 @NoArgsConstructor
 @Builder
 @EqualsAndHashCode
-public class AccountCodeDetailId implements Serializable {
+public class AccountManagerId implements Serializable {
 
-    private String userId;
-
-    private String codeId;
-
-    private String codeGroup;
+    private String transactionId;
 
     private String comCd;
+
+    private String userId;
 
 }
