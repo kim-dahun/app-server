@@ -15,15 +15,22 @@ import lombok.experimental.SuperBuilder;
 public class AccountReportVo extends AccountCodeDetailVo {
 
     private String codeId;
+    private String codeDesc;
 
     private Double amount;
-    private String type;
     private String transactionId;
     private String userId;
+
     private String tradeType;
+    private String tradeTypeDesc;
+
     private String remark;
     private String transactionDate;
-    private String tradeCode;
+    private String projectCode;
+    private String projectDesc; //
+
+    private String tradeTarget;
+    private String tradeTargetDesc;
 
     public AccountManager toEntity(){
         return AccountManager
@@ -31,13 +38,14 @@ public class AccountReportVo extends AccountCodeDetailVo {
                 .transactionId(transactionId)
                 .remark(remark)
                 .userId(userId)
-                .type(type)
                 .tradeType(tradeType)
                 .amount(amount)
                 .codeId(codeId)
                 .transactionDate(transactionDate)
-                .tradeCode(tradeCode)
+                .projectCode(projectCode)
                 .comCd(comCd)
+                .tradeTarget(tradeTarget)
+                .tradeTargetDesc(tradeTargetDesc)
                 .build();
     }
 
@@ -47,13 +55,14 @@ public class AccountReportVo extends AccountCodeDetailVo {
                 .transactionId(accountManager.getTransactionId())
                 .codeId(accountManager.getCodeId())
                 .amount(accountManager.getAmount())
-                .type(accountManager.getType())
                 .userId(accountManager.getUserId())
                 .tradeType(accountManager.getTradeType())
                 .remark(accountManager.getRemark())
                 .transactionDate(accountManager.getTransactionDate())
-                .tradeCode(accountManager.getTradeCode())
+                .projectCode(accountManager.getProjectCode())
                 .comCd(accountManager.getComCd())
+                .tradeTarget(accountManager.getTradeTarget())
+                .tradeTargetDesc(accountManager.getTradeTargetDesc())
                 .build();
     }
 

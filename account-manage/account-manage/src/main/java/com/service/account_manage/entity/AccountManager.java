@@ -28,17 +28,20 @@ public class AccountManager extends CmnBaseCUDEntity {
     @Column(name = "USER_ID", length = 20)
     private String userId;
 
-    @Column(name = "TRADE_CODE",length = 20)
-    private String tradeCode;
+    @Column(name = "PROJECT_CODE",length = 20)
+    private String projectCode;
 
     @Column(name = "AMOUNT")
     private Double amount = 0.0;
 
-    @Column(name = "TYPE", length = 10)
-    private String type;
-
     @Column(name = "TRADE_TYPE", length = 20)
     private String tradeType;
+
+    @Column(name = "TRADE_TARGET", length = 100)
+    private String tradeTarget;
+
+    @Column(name = "TRADE_TARGET_DESC", length = 100)
+    private String tradeTargetDesc;
 
     @Column(name = "ACCOUNT_CODE", length = 20)
     private String codeId;
@@ -55,8 +58,7 @@ public class AccountManager extends CmnBaseCUDEntity {
     }
 
     // 거래 유형 변경
-    public void changeTradeType(String type, String tradeType) {
-        this.type = type;
+    public void changeTradeType(String tradeType) {
         this.tradeType = tradeType;
     }
 
@@ -77,12 +79,12 @@ public class AccountManager extends CmnBaseCUDEntity {
 
 
     // 전체 거래 정보 수정이 필요한 경우를 위한 메서드
-    public void updateTransaction(Double amount, String type, String tradeType, String codeId, String remark, String transactionDate) {
+    public void updateTransaction(Double amount, String tradeType, String codeId, String remark, String transactionDate, String projectCode) {
         this.amount = amount;
-        this.type = type;
         this.tradeType = tradeType;
         this.codeId = codeId;
         this.remark = remark;
+        this.projectCode = projectCode;
         this.transactionDate = transactionDate;
     }
 
