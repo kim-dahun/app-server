@@ -22,10 +22,13 @@ public class RequestAccReportVo extends CmnRequestVo {
     private String codeId;
     private String codeDesc;
     private String tradeType;
-    private String type;
     private String useYn;
+    private String transactionId;
 
     private String startDate;
     private String endDate;
+
+    private String tradeTargetDesc;
+    private String tradeTarget;
 
 }

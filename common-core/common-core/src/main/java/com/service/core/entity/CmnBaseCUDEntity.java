@@ -3,12 +3,24 @@ package com.service.core.entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
+import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.LocalDateTime;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Setter
+@Getter
 @MappedSuperclass
+@SuperBuilder
 @EntityListeners(AuditingEntityListener.class)
 public abstract class CmnBaseCUDEntity {
 
@@ -20,49 +32,28 @@ public abstract class CmnBaseCUDEntity {
     @Column(nullable = false, name = "UPDATE_DATE")
     private LocalDateTime updateDate = LocalDateTime.now();
 
+    @CreatedBy
+    @Column(name = "CREATE_USER")
+    private String createUser;
+
+    @LastModifiedBy
+    @Column(name = "UPDATE_USER")
+    private String updateUser;
+
     @Column(name = "DELETE_DATE")
     private LocalDateTime deleteDate;
+
+    @Column(name = "DELETE_USER")
+    private String deleteUser;
 
     @Column(name = "USE_YN", length = 1)
     private String useYn;
 
-    // Getters and Setters
-    protected LocalDateTime getCreateDate() {
-        return createDate;
-    }
-
-    protected void setCreateDate(LocalDateTime createDate) {
-        this.createDate = createDate;
-    }
-
-    protected LocalDateTime getUpdateDate() {
-        return updateDate;
-    }
-
-    protected void setUpdateDate(LocalDateTime updateDate) {
-        this.updateDate = updateDate;
-    }
-
-    public LocalDateTime getDeleteDate() {
-        return deleteDate;
-    }
-
-    public void setDeleteDate(LocalDateTime deleteDate) {
-        this.deleteDate = deleteDate;
-    }
-
-    public String getUseYn() {
-        return useYn;
-    }
-
-    public void setUseYn(String useYn) {
-        this.useYn = useYn;
-    }
-
     // 소프트 삭제를 위한 메서드
-    public void delete() {
+    public void delete(String userId) {
         this.useYn = "N";
         this.deleteDate = LocalDateTime.now();
+        this.deleteUser = userId;
     }
 
     // 삭제 여부 확인
@@ -74,5 +65,6 @@ public abstract class CmnBaseCUDEntity {
     public void restore() {
         this.useYn = "Y";
         this.deleteDate = null;
+        this.deleteUser = null;
     }
 }

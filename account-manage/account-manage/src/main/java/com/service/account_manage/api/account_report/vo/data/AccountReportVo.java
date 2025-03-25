@@ -32,6 +32,8 @@ public class AccountReportVo extends AccountCodeDetailVo {
     private String tradeTarget;
     private String tradeTargetDesc;
 
+    private String transactionTimekey;
+
     public AccountManager toEntity(){
         return AccountManager
                 .builder()
@@ -46,6 +48,7 @@ public class AccountReportVo extends AccountCodeDetailVo {
                 .comCd(comCd)
                 .tradeTarget(tradeTarget)
                 .tradeTargetDesc(tradeTargetDesc)
+                .transactionTimekey(transactionTimekey)
                 .build();
     }
 
@@ -63,6 +66,7 @@ public class AccountReportVo extends AccountCodeDetailVo {
                 .comCd(accountManager.getComCd())
                 .tradeTarget(accountManager.getTradeTarget())
                 .tradeTargetDesc(accountManager.getTradeTargetDesc())
+                .transactionTimekey(accountManager.getTransactionTimekey())
                 .build();
     }
 

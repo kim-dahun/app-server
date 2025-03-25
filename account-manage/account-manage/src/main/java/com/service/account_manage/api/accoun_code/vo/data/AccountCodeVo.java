@@ -25,6 +25,12 @@ public class AccountCodeVo {
     protected LocalDateTime createDate;
     protected LocalDateTime updateDate;
     protected LocalDateTime deleteDate;
+
+    protected String crudFlag;
+
+    protected String createUser;
+    protected String updateUser;
+    protected String deleteUser;
     protected String comCd;
 
     public AccountCode toAccountCodeEntity() {
@@ -34,6 +40,12 @@ public class AccountCodeVo {
                 .userId(userId)
                 .sortSeq(sortSeq)
                 .comCd(comCd)
+                .createUser(updateUser)
+                .createDate(updateDate)
+                .updateUser(updateUser)
+                .updateDate(updateDate)
+                .deleteUser(deleteUser)
+                .deleteDate(deleteDate)
                 .build();
     }
 
@@ -44,6 +56,12 @@ public class AccountCodeVo {
                 .userId(accountCode.getUserId())
                 .sortSeq(accountCode.getSortSeq())
                 .comCd(accountCode.getComCd())
+                .createUser(accountCode.getCreateUser())
+                .createDate(accountCode.getCreateDate())
+                .updateUser(accountCode.getUpdateUser())
+                .updateDate(accountCode.getUpdateDate())
+                .deleteUser(accountCode.getDeleteUser())
+                .deleteDate(accountCode.getDeleteDate())
                 .build();
     }
 

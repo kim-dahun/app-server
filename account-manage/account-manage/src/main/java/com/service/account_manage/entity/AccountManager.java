@@ -28,6 +28,10 @@ public class AccountManager extends CmnBaseCUDEntity {
     @Column(name = "USER_ID", length = 20)
     private String userId;
 
+    @Id
+    @Column(name = "TRANSACTION_TIMEKEY")
+    private String transactionTimekey;;
+
     @Column(name = "PROJECT_CODE",length = 20)
     private String projectCode;
 
@@ -51,6 +55,7 @@ public class AccountManager extends CmnBaseCUDEntity {
 
     @Column(name = "TRANSACTION_DATE", length = 20)
     private String transactionDate;
+
 
     // 거래 금액 수정
     public void changeAmount(Double amount) {

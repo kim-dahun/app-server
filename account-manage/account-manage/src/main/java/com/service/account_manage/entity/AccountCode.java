@@ -4,6 +4,7 @@ import com.service.account_manage.entity.id.AccountCodeId;
 import com.service.core.entity.CmnBaseCUDEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.DynamicUpdate;
 
 import java.util.ArrayList;
@@ -15,7 +16,7 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@SuperBuilder
 public class AccountCode extends CmnBaseCUDEntity {
 
 
