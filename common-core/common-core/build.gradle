@@ -89,7 +89,8 @@ jar {
 // JAR 파일 복사 task 정의
 tasks.register('copyJarToDeployment', Copy) {
     def destinations = [
-            "../../account-manage/account-manage/lib"
+            "../../account-manage/account-manage/lib",
+            "../../api-gateway/api-gateway/lib"
     ]
 
     // 각 대상 디렉토리 존재 확인 및 생성

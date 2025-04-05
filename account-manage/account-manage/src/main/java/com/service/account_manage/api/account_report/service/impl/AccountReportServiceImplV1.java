@@ -155,8 +155,4 @@ public class AccountReportServiceImplV1 implements AccountReportService {
         return ResponseEntity.ok(cmnResponseVo);
     }
 
-
-    private String makeTransactionId(String timeKey, String userId, String comCd) {
-        return comCd + "_" + userId + "_" + timeKey;
-    }
 }
