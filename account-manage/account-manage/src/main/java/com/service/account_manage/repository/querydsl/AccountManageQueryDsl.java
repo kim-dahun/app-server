@@ -136,12 +136,6 @@ public class AccountManageQueryDsl {
                 .and(eqTransactionId(transactionId));
     }
 
-    private BooleanExpression betweenPage(Integer pageNum, Integer pageSize) {
-        if(isNotNull(pageSize) && isNotNull(pageNum)){
-            return accountManager.transactionId
-        }
-    }
-
     private BooleanExpression eqTransactionId(String transactionId) {
         if(isNotNull(transactionId)){
             return accountManager.transactionId.eq(transactionId);

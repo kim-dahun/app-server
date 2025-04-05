@@ -38,6 +38,7 @@ public class AccountCode extends CmnBaseCUDEntity {
     @Column(name = "SORT_SEQ")
     private Integer sortSeq;
 
+    @Builder.Default
     @OneToMany(mappedBy = "accountCode", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.LAZY)
     private List<AccountCodeDetail> accountCodeDetailList = new ArrayList<>();
 

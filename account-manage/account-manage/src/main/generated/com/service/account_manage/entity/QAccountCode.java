@@ -34,12 +34,21 @@ public class QAccountCode extends EntityPathBase<AccountCode> {
     public final DateTimePath<java.time.LocalDateTime> createDate = _super.createDate;
 
     //inherited
+    public final StringPath createUser = _super.createUser;
+
+    //inherited
     public final DateTimePath<java.time.LocalDateTime> deleteDate = _super.deleteDate;
+
+    //inherited
+    public final StringPath deleteUser = _super.deleteUser;
 
     public final NumberPath<Integer> sortSeq = createNumber("sortSeq", Integer.class);
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updateDate = _super.updateDate;
+
+    //inherited
+    public final StringPath updateUser = _super.updateUser;
 
     public final StringPath userId = createString("userId");
 

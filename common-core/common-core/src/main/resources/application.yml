@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: common-core
+
+  jdbc:
+    template:
+      fetch-size: 500
+      query-timeout: 60
+      max-rows: -1
+
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+        default_batch_fetch_size: 1000
+    open-in-view: false
+
+logging:
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"

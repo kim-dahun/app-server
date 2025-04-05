@@ -17,7 +17,7 @@ import org.hibernate.annotations.DynamicUpdate;
 public class AccountManager extends CmnBaseCUDEntity {
 
     @Id
-    @Column(name = "TRANSACTION_ID", length = 40)
+    @Column(name = "TRANSACTION_ID", length = 100)
     private String transactionId;
 
     @Id
@@ -35,6 +35,7 @@ public class AccountManager extends CmnBaseCUDEntity {
     @Column(name = "PROJECT_CODE",length = 20)
     private String projectCode;
 
+    @Builder.Default
     @Column(name = "AMOUNT")
     private Double amount = 0.0;
 

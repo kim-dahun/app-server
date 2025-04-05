@@ -45,4 +45,12 @@ public interface NativeQueryUtilsModel {
 
     <T> List<T> getSelectQueryResults(String packageName, String queryId, Map<String, Object> eqParamMap, Map<String, Object> inParamMap, Class<T> clazz);
 
+    <T> List<T> getQueryResultListByQueryString(String queryString, Class<T> clazz);
+
+    List<Map<String, Object>> getQueryResultListByQueryString(String queryString);
+
+    Object getQueryResultByQueryString(String queryString, Class<?> clazz);
+
+    int executeQueryString(String queryString, List<Map<String,?>> paramMaps);
+
 }

@@ -23,6 +23,8 @@ public class QAccountManagerId extends BeanPath<AccountManagerId> {
 
     public final StringPath transactionId = createString("transactionId");
 
+    public final StringPath userId = createString("userId");
+
     public QAccountManagerId(String variable) {
         super(AccountManagerId.class, forVariable(variable));
     }

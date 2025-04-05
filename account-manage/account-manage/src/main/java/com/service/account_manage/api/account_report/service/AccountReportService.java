@@ -27,12 +27,4 @@ public interface AccountReportService {
      */
     ResponseEntity<CmnResponseVo> selectFrequentlyAccountReportList(RequestAccReportVo requestAccReportVo);
 
-    /**
-     * 거래내역을 최초 등록할 때 거래 코드를 생성하는 메서드
-     * @param timeKey
-     * @param userId
-     * @return
-     */
-    String makeTransactionId(String timeKey, String userId, String comCd);
-
 }

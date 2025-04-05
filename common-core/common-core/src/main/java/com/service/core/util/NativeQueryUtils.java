@@ -5,7 +5,10 @@ import com.service.core.exception.CustomDocsParserException;
 import com.service.core.model.NativeQueryUtilsModel;
 import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -25,6 +28,7 @@ import java.util.*;
 public class NativeQueryUtils implements NativeQueryUtilsModel {
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     private ClassLoader getServiceClassLoader() {
         StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
@@ -240,4 +244,44 @@ public class NativeQueryUtils implements NativeQueryUtilsModel {
                 Map.of(), clazz);
         return maps;
     }
+
+    @Override
+    public <T> List<T> getQueryResultListByQueryString(String queryString, Class<T> clazz) {
+        return jdbcTemplate.queryForList(queryString, clazz);
+    }
+
+    @Override
+    public List<Map<String, Object>> getQueryResultListByQueryString(String queryString) {
+        return jdbcTemplate.queryForList(queryString);
+    }
+
+    @Override
+    public Object getQueryResultByQueryString(String queryString, Class<?> clazz) {
+        return jdbcTemplate.queryForObject(queryString, clazz);
+    }
+
+    @Override
+    public int executeQueryString(String queryString, List<Map<String, ?>> paramMaps) {
+        MapSqlParameterSource[] mapSqlParameterSources = new MapSqlParameterSource[paramMaps.size()];
+        int index = 0;
+        SqlParameterSource[] sqlParameterSource = getSqlParameterArray(paramMaps, mapSqlParameterSources, index);
+        return namedParameterJdbcTemplate.batchUpdate(queryString,sqlParameterSource).length;
+    }
+
+    private SqlParameterSource[] getSqlParameterArray(List<Map<String, ?>> paramMaps, MapSqlParameterSource[] mapSqlParameterSources, int index) {
+        for(Map<String, ?> paramMap : paramMaps){
+            MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+            paramMap.forEach((key,value)->{
+                mapSqlParameterSource.addValue(key, getNullSafetyValue(value));
+            });
+            mapSqlParameterSources[index++] = mapSqlParameterSource;
+        }
+        return mapSqlParameterSources;
+    }
+
+    private Object getNullSafetyValue(Object value) {
+        return value != null ? value : "null";
+    }
+
+
 }

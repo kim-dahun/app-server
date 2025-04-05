@@ -31,4 +31,7 @@ public class RequestAccReportVo extends CmnRequestVo {
     private String tradeTargetDesc;
     private String tradeTarget;
 
+    private List<String> userIds;
+
+
 }

@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -20,5 +22,9 @@ public class CmnRequestVo {
 
     private Integer pageNum;
     private Integer pageSize;
+
+    private LocalDateTime updateDate;
+    private LocalDateTime deleteDate;
+    private LocalDateTime createDate;
 
 }

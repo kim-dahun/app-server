@@ -21,9 +21,15 @@ public class QCmnBaseCUDEntity extends EntityPathBase<CmnBaseCUDEntity> {
 
     public final DateTimePath<java.time.LocalDateTime> createDate = createDateTime("createDate", java.time.LocalDateTime.class);
 
+    public final StringPath createUser = createString("createUser");
+
     public final DateTimePath<java.time.LocalDateTime> deleteDate = createDateTime("deleteDate", java.time.LocalDateTime.class);
 
+    public final StringPath deleteUser = createString("deleteUser");
+
     public final DateTimePath<java.time.LocalDateTime> updateDate = createDateTime("updateDate", java.time.LocalDateTime.class);
+
+    public final StringPath updateUser = createString("updateUser");
 
     public final StringPath useYn = createString("useYn");
 

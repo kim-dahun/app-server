@@ -31,11 +31,21 @@ public class QAccountManager extends EntityPathBase<AccountManager> {
     public final DateTimePath<java.time.LocalDateTime> createDate = _super.createDate;
 
     //inherited
+    public final StringPath createUser = _super.createUser;
+
+    //inherited
     public final DateTimePath<java.time.LocalDateTime> deleteDate = _super.deleteDate;
+
+    //inherited
+    public final StringPath deleteUser = _super.deleteUser;
+
+    public final StringPath projectCode = createString("projectCode");
 
     public final StringPath remark = createString("remark");
 
-    public final StringPath tradeCode = createString("tradeCode");
+    public final StringPath tradeTarget = createString("tradeTarget");
+
+    public final StringPath tradeTargetDesc = createString("tradeTargetDesc");
 
     public final StringPath tradeType = createString("tradeType");
 
@@ -43,10 +53,13 @@ public class QAccountManager extends EntityPathBase<AccountManager> {
 
     public final StringPath transactionId = createString("transactionId");
 
-    public final StringPath type = createString("type");
+    public final StringPath transactionTimekey = createString("transactionTimekey");
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updateDate = _super.updateDate;
+
+    //inherited
+    public final StringPath updateUser = _super.updateUser;
 
     public final StringPath userId = createString("userId");
 

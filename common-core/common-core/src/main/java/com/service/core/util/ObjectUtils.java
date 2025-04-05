@@ -2,6 +2,7 @@ package com.service.core.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class ObjectUtils {
@@ -150,5 +151,9 @@ public class ObjectUtils {
         return param!=null && param.equals("Y");
     }
 
+
+    public static String getCommonTableId(String userId, String comCd, LocalDateTime now){
+        return userId + "_" + comCd + "_" + ConverterUtils.getTimeKeyMillSecond(now);
+    }
 
 }
