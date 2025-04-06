@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Builder
 @AllArgsConstructor
@@ -37,6 +38,6 @@ public class RequestHistory {
     private String requestToken;
 
     @Column(name = "REQUEST_DATE_TIME")
-    private Instant requestDateTime;
+    private LocalDateTime requestDateTime;
 
 }

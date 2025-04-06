@@ -1,5 +1,6 @@
 package com.service.core.service.impl;
 
+import com.service.core.constants.MessageConstants;
 import com.service.core.service.MessageService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.LocaleResolver;
 
 import java.util.Locale;
+
+import static com.service.core.constants.MessageConstants.KO;
 
 @RequiredArgsConstructor
 @Service
@@ -19,7 +22,7 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public String getMessage(String langCode, Object[] msgParams ,String msgCode) {
-        Locale locale = new Locale(langCode);
+        Locale locale = Locale.of(langCode);
 
         return messageSource.getMessage(msgCode,msgParams, locale);
 
@@ -27,8 +30,8 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public String getMessage(HttpServletRequest request, Object[] msgParams, String msgCode) {
-        Locale locale = localeResolver.resolveLocale(request);
+    public String getMessage(Object[] msgParams, String msgCode) {
+        Locale locale = Locale.KOREAN;
         return messageSource.getMessage(msgCode,msgParams, locale);
     }
 }

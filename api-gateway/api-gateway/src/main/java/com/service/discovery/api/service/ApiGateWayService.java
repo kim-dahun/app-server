@@ -2,7 +2,7 @@ package com.service.discovery.api.service;
 
 import com.service.core.vo.response.CmnResponseVo;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.server.ServerHttpRequest;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 import reactor.core.publisher.Mono;
 
 import java.io.IOException;
@@ -16,14 +16,14 @@ public interface ApiGateWayService {
 
     Mono<ResponseEntity<CmnResponseVo>> api_doHttpRequest(ServerHttpRequest request, Mono<byte[]> body) throws IOException;
 
-    Boolean isAuth(ServerHttpRequest request, Mono<byte[]> body);
+    Boolean isAuth(ServerHttpRequest request);
 
     String getApiUrl(String serviceName);
 
     void setApiUrl(String serviceName, String apiUrl);
 
-    Boolean api_insertRequestHistory(ServerHttpRequest request);
+    Boolean api_insertRequestHistory(String ip, String deviceNm, String method, String endPoint, String token);
 
-    Boolean isBadRequest(ServerHttpRequest request);
+    boolean isBadRequest(String[] urlPatterns);
 
 }
