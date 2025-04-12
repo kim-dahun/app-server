@@ -79,29 +79,61 @@ bootJar {
 
 jar {
     enabled = true
-    // 의존성을 포함하도록 설정
-//    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-//
-//    // 모든 컴파일 의존성 포함
-//    from {
-//        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
-//    }
+
 }
 
 // JAR 파일 복사 task 정의
 tasks.register('copyJarToDeployment', Copy) {
+    dependsOn jar
+
     def destinations = [
             "../../account-manage/account-manage/lib",
-//            "../../api-gateway/api-gateway/lib",
+            "../../api-gateway/api-gateway/lib",
             "../../user-manage/user-manage/lib"
     ]
 
-    // 각 대상 디렉토리 존재 확인 및 생성
-    destinations.forEach { dest ->
-        from(file("build/libs")) // 복사할 JAR 파일이 있는 폴더 (현재 프로젝트 기준)
-        into(file(dest)) // 복사할 상대경로 폴더
-        include("*.jar") // JAR 파일만 복사하도록 필터링
-        DuplicatesStrategy.EXCLUDE
+    doFirst {
+        println "=== Starting JAR copy process ==="
+        // 각 대상 디렉토리 확인 및 생성
+        destinations.forEach { dest ->
+            def destDir = file(dest)
+            if (!destDir.exists()) {
+                println "Creating directory: ${destDir.absolutePath}"
+                destDir.mkdirs()
+            }
+            // 디렉토리 권한 확인
+            println """
+                Directory: ${destDir.absolutePath}
+                Exists: ${destDir.exists()}
+                Can Write: ${destDir.canWrite()}
+                Is Directory: ${destDir.isDirectory()}
+            """
+        }
+    }
+
+
+
+
+    // 각 destination마다 별도의 복사 작업 설정
+    destinations.each { dest ->
+        copy {
+            from("build/libs") {
+                include "*.jar"
+            }
+            into file(dest)
+            duplicatesStrategy = DuplicatesStrategy.INCLUDE
+        }
+    }
+
+    doLast {
+        println "=== JAR copy completed ==="
+        destinations.forEach { dest ->
+            def destDir = file(dest)
+            println "Files in ${destDir.absolutePath}:"
+            destDir.listFiles()?.each { file ->
+                println " - ${file.name} (${file.length()} bytes)"
+            }
+        }
     }
 
 

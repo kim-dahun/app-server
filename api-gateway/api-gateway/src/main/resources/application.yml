@@ -22,19 +22,24 @@ spring:
     gateway:
       routes:
         - id: account-service
-          uri: http://localhost:8081  # ?? ???? ?? ??
+          uri: lb://account-manage
           predicates:
             - Path=/api/account/**
           filters:
-            - StripPrefix=1
-            - AddRequestHeader=X-Request-From, gateway
+            - RemoveRequestHeader=Cookie
+            - TokenRelay
+          metadata:
+            requiredScope: account-manage.access
 
-        - id: another-service
-          uri: http://localhost:8082  # ?? ???? ?? ??
+        - id: user-service
+          uri: lb://user-manage
           predicates:
-            - Path=/api/another/**
+            - Path=/api/user/**
           filters:
-            - StripPrefix=1
+            - RemoveRequestHeader=Cookie
+            - TokenRelay
+          metadata:
+            requiredScope: user-manage.access
 
       default-filters:
         - DedupeResponseHeader=Access-Control-Allow-Origin

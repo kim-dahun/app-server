@@ -1,5 +1,6 @@
 package com.service.discovery.entity;
 
+import com.service.core.constants.ApiConstants;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;

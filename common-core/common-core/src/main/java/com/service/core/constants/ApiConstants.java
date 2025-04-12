@@ -7,4 +7,6 @@ public class ApiConstants {
 
     public static final String API_AUTH_MANAGE = "/auth-manage-server";
 
+    public static final String API_USER_MANAGE = "/user-manage-server";
+
 }

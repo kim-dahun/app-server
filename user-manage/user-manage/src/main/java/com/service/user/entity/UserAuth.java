@@ -14,6 +14,7 @@ import lombok.*;
 @Entity
 @Table(name = "USER_AUTH", schema = "USER_MANAGE")
 public class UserAuth extends CmnBaseCUDEntity {
+
     @Id
     @jakarta.validation.constraints.Size(max = 50)
     @jakarta.validation.constraints.NotNull
