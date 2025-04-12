@@ -22,7 +22,7 @@ public interface ApiGateWayService {
 
     void setApiUrl(String serviceName, String apiUrl);
 
-    Boolean api_insertRequestHistory(String ip, String deviceNm, String method, String endPoint, String token);
+    Mono<Boolean> api_insertRequestHistory(String ip, String deviceNm, String method, String endPoint, String token);
 
     boolean isBadRequest(String[] urlPatterns);
 

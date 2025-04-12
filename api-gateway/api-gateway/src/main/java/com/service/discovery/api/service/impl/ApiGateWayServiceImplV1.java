@@ -1,6 +1,5 @@
 package com.service.discovery.api.service.impl;
 
-import com.service.core.constants.MessageConstants;
 import com.service.core.exception.CustomRuntimeException;
 import com.service.core.service.MessageService;
 import com.service.core.util.ConverterUtils;
@@ -12,23 +11,15 @@ import com.service.discovery.repository.RequestHistoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpCookie;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StreamUtils;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.nio.charset.StandardCharsets;
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -46,9 +37,9 @@ public class ApiGateWayServiceImplV1 implements ApiGateWayService {
     public final Map<String, List<String>> servicePortMap = new ConcurrentHashMap<>();
     public final Map<String, AtomicInteger> serviceRoundRobinIndexMap = new ConcurrentHashMap<>();
 
-    private final RequestHistoryRepository requestHistoryRepository;
-
     private final WebClient.Builder webClientBuilder;
+
+    private final RequestHistoryRepository requestHistoryRepository;
 
     private final String AUTH_MANAGE_SERVER = "auth-manage-server";
 
@@ -73,22 +64,35 @@ public class ApiGateWayServiceImplV1 implements ApiGateWayService {
         String fullPath = String.join("/",urlPatterns);
         String token = "";
         HttpHeaders headers = request.getHeaders();
-        if(!api_insertRequestHistory(clientIp, userAgent, request.getMethod().name(), fullPath, token)){
-            return Mono.error(new CustomRuntimeException("데이터 전달 중 에러 발생"));
-        }
-        headers.remove(HOST);
+        return api_insertRequestHistory(clientIp, userAgent, request.getMethod().name(), fullPath, token)
+                .flatMap(inserted -> {
+                    if (!inserted) {
+                        return Mono.error(new CustomRuntimeException("데이터 전달 중 에러 발생"));
+                    }
 
-        return webClient.method(request.getMethod())
-                .uri(fullPath)
-                .headers((httpHeaders -> httpHeaders.addAll(headers)))
-                .body(body!=null ? BodyInserters.fromPublisher(body, byte[].class) : BodyInserters.empty())
-                .exchangeToMono((response) -> response.toEntity(CmnResponseVo.class));
+                    return webClient.method(request.getMethod())
+                            .uri(fullPath)
+                            .headers(httpHeaders -> httpHeaders.addAll(headers))
+                            .body(body != null ? BodyInserters.fromPublisher(body, byte[].class) : BodyInserters.empty())
+                            .exchangeToMono(response -> response.toEntity(CmnResponseVo.class));
+                });
+//        headers.remove(HOST);
+//
+//        return webClient.method(request.getMethod())
+//                .uri(fullPath)
+//                .headers((httpHeaders -> httpHeaders.addAll(headers)))
+//                .body(body!=null ? BodyInserters.fromPublisher(body, byte[].class) : BodyInserters.empty())
+//                .exchangeToMono((response) -> response.toEntity(CmnResponseVo.class));
 
     }
 
     @Override
     public Boolean isAuth(ServerHttpRequest request)  {
         HttpCookie httpCookie = request.getCookies().getFirst("Authorization");
+        if(!httpCookie.toString().startsWith("Bearer ")) {
+            return false;
+        }
+        String token = httpCookie.getValue().substring(7);
         return null;
     }
 
@@ -118,25 +122,23 @@ public class ApiGateWayServiceImplV1 implements ApiGateWayService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Mono<Boolean> api_insertRequestHistory(String ip, String deviceNm, String method, String endPoint, String token) {
+        LocalDateTime now = LocalDateTime.now();
+        String timekey = ConverterUtils.getTimeKeyMillSecond(now);
 
-    public Boolean api_insertRequestHistory(String ip, String deviceNm, String method, String endPoint, String token) {
-        try {
-            LocalDateTime now = LocalDateTime.now();
-            String timekey = ConverterUtils.getTimeKeyMillSecond(now);
-            requestHistoryRepository.save(
-                    RequestHistory.builder()
-                            .requestId(timekey)
-                            .clientIp(ip)
-                            .clientDeviceNm(deviceNm)
-                            .requestEndPoint(endPoint)
-                            .requestType(method)
-                            .requestToken(token)
-                            .requestDateTime(now)
-                            .build());
-            return true;
-        } catch (Exception e){
-            return false;
-        }
+        return requestHistoryRepository.save(
+                        RequestHistory.builder()
+                                .requestId(timekey)
+                                .clientIp(ip)
+                                .clientDeviceNm(deviceNm)
+                                .requestEndPoint(endPoint)
+                                .requestType(method)
+                                .requestToken(token)
+                                .requestDateTime(now)
+                                .build())
+                .map(saved -> true)
+                .onErrorResume(e -> Mono.just(false));
     }
 
     @Override

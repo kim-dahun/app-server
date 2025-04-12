@@ -20,4 +20,7 @@ public class AccountManagerId implements Serializable {
 
     private String userId;
 
+    private String transactionTimekey;;
+
+
 }

@@ -31,7 +31,7 @@ public class AccountReportController {
         return accountReportService.updateAccountReportList(requestAccReportVo);
     }
 
-    @PutMapping
+    @PutMapping("/delete")
     public ResponseEntity<CmnResponseVo> api_deleteAccountReport(@RequestBody RequestAccReportVo requestAccReportVo){
         return accountReportService.deleteAccountReportList(requestAccReportVo);
     }

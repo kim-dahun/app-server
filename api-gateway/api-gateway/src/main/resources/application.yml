@@ -39,16 +39,25 @@ spring:
       default-filters:
         - DedupeResponseHeader=Access-Control-Allow-Origin
         - AddResponseHeader=Access-Control-Allow-Origin, *  # CORS ??
-  datasource:
+  r2dbc:
     url: ${url}
-    driver-class-name: org.mariadb.jdbc.Driver
     username: ${username}
     password: ${password}
-    hikari:
-      maximum-pool-size: 50
-      minimum-idle: 5
-      max-lifetime: 1800000 #30min
-      idle-timeout: 600000 #10min
+    pool:
+      initial-size: 5
+      max-size: 20
+      max-idle-time: 30m
+      validation-query: SELECT 1
+#  datasource:
+#    url: ${url}
+#    driver-class-name: org.mariadb.jdbc.Driver
+#    username: ${username}
+#    password: ${password}
+#    hikari:
+#      maximum-pool-size: 50
+#      minimum-idle: 5
+#      max-lifetime: 1800000 #30min
+#      idle-timeout: 600000 #10min
   messages:
     basename: messages
     encoding: UTF-8

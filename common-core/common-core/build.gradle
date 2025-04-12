@@ -28,6 +28,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-graphql'
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
@@ -90,7 +92,8 @@ jar {
 tasks.register('copyJarToDeployment', Copy) {
     def destinations = [
             "../../account-manage/account-manage/lib",
-            "../../api-gateway/api-gateway/lib"
+//            "../../api-gateway/api-gateway/lib",
+            "../../user-manage/user-manage/lib"
     ]
 
     // 각 대상 디렉토리 존재 확인 및 생성
