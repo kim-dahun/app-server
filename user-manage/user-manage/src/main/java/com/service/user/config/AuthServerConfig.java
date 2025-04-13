@@ -111,10 +111,10 @@ public class AuthServerConfig {
     }
 
     // JWT 설정
-    @Bean
-    public JwtDecoder jwtDecoder(JWKSource<SecurityContext> jwkSource) {
-        return OAuth2AuthorizationServerConfiguration.jwtDecoder(jwkSource);
-    }
+//    @Bean
+//    public JwtDecoder jwtDecoder(JWKSource<SecurityContext> jwkSource) {
+//        return OAuth2AuthorizationServerConfiguration.jwtDecoder(jwkSource);
+//    }
 
     @Bean
     public JWKSource<SecurityContext> jwkSource() {
@@ -166,7 +166,8 @@ public class AuthServerConfig {
                         auth
                                 .requestMatchers(API_BASE+ API_AUTH_MANAGE+"/sign-up").permitAll()
                                 .requestMatchers(API_BASE+ API_AUTH_MANAGE+"/login").permitAll()
-                        .anyRequest().authenticated())
+                                .requestMatchers("/oauth2/jwks").permitAll()  // JWK Set 엔드포인트 허용
+                                .anyRequest().authenticated())
                 .formLogin(Customizer.withDefaults());
 
         return httpSecurity.build();
