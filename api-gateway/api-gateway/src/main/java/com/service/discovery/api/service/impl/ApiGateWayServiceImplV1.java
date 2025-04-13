@@ -76,24 +76,7 @@ public class ApiGateWayServiceImplV1 implements ApiGateWayService {
                             .body(body != null ? BodyInserters.fromPublisher(body, byte[].class) : BodyInserters.empty())
                             .exchangeToMono(response -> response.toEntity(CmnResponseVo.class));
                 });
-//        headers.remove(HOST);
-//
-//        return webClient.method(request.getMethod())
-//                .uri(fullPath)
-//                .headers((httpHeaders -> httpHeaders.addAll(headers)))
-//                .body(body!=null ? BodyInserters.fromPublisher(body, byte[].class) : BodyInserters.empty())
-//                .exchangeToMono((response) -> response.toEntity(CmnResponseVo.class));
 
-    }
-
-    @Override
-    public Boolean isAuth(ServerHttpRequest request)  {
-        HttpCookie httpCookie = request.getCookies().getFirst("Authorization");
-        if(!httpCookie.toString().startsWith("Bearer ")) {
-            return false;
-        }
-        String token = httpCookie.getValue().substring(7);
-        return null;
     }
 
     @Override

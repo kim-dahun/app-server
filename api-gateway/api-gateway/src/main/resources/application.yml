@@ -13,6 +13,9 @@ management:
       access: read_only
     prometheus:
       access: read_only
+    loggers:
+      access: read_only
+
 
 spring:
   application:
@@ -22,24 +25,22 @@ spring:
     gateway:
       routes:
         - id: account-service
-          uri: lb://account-manage
+          uri: lb://acc-manage-server
           predicates:
-            - Path=/api/account/**
+            - Path=/api/acc-manage-server/**
           filters:
             - RemoveRequestHeader=Cookie
             - TokenRelay
           metadata:
-            requiredScope: account-manage.access
+            requiredScope: api.access
 
         - id: user-service
-          uri: lb://user-manage
+          uri: lb://user-manage-server
           predicates:
-            - Path=/api/user/**
+            - Path=/api/user-manage-server/**
           filters:
             - RemoveRequestHeader=Cookie
             - TokenRelay
-          metadata:
-            requiredScope: user-manage.access
 
       default-filters:
         - DedupeResponseHeader=Access-Control-Allow-Origin
@@ -48,11 +49,11 @@ spring:
     url: ${url}
     username: ${username}
     password: ${password}
-    pool:
-      initial-size: 5
-      max-size: 20
-      max-idle-time: 30m
-      validation-query: SELECT 1
+    properties:
+      initialSize: 5
+      maxSize: 20
+      maxIdleTime: PT30M  # 30분
+      validationQuery: SELECT 1
 #  datasource:
 #    url: ${url}
 #    driver-class-name: org.mariadb.jdbc.Driver
@@ -67,24 +68,20 @@ spring:
     basename: messages
     encoding: UTF-8
 
-  jpa:
-    hibernate:
-      ddl-auto: update  # option type: create, create-drop, update, validate, none
-      naming:
-        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
-    properties:
-      hibernate:
-        show_sql: true  # sql ??? ?????.
-        format_sql: true  # sql query formatting
-        use_sql_comments: true  # sql ??? ????? ?????.
+#  jpa:
+#    hibernate:
+#      ddl-auto: update  # option type: create, create-drop, update, validate, none
+#      naming:
+#        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+#    properties:
+#      hibernate:
+#        show_sql: true  # sql ??? ?????.
+#        format_sql: true  # sql query formatting
+#        use_sql_comments: true  # sql ??? ????? ?????.
 
 logging:
   level:
-    org:
-      hibernate:
-        type:
-          descriptor:
-            sql: debug  # query? ?? ?? ?? ????? ??? ? ?? ?????. TRACE Log? ?? ?????.
+    root: INFO
 
 
 file:

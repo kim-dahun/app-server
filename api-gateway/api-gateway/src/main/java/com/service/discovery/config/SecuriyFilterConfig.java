@@ -23,8 +23,9 @@ public class SecuriyFilterConfig {
                         .jwt(jwt -> jwt
                                 .jwkSetUri("http://127.0.0.1:6000/login")))
                 .authorizeExchange(exchanges -> exchanges
-                        .pathMatchers( API_BASE+API_ACCOUNT_MANAGE +"/**").hasAuthority("account-server.access")
-                        .pathMatchers(API_BASE+API_USER_MANAGE+"/**").hasAuthority("user-server.access")
+                        .pathMatchers(API_BASE+API_USER_MANAGE+ "/sign-up",API_BASE+API_USER_MANAGE+"/login").permitAll()
+                        .pathMatchers( API_BASE+API_ACCOUNT_MANAGE +"/**").hasAuthority("api.access")
+                        .pathMatchers(API_BASE+API_USER_MANAGE+"/**").hasAuthority("api.access")
                         .anyExchange().authenticated()
                 )
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)

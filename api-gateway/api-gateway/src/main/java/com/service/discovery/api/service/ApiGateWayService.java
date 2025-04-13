@@ -16,8 +16,6 @@ public interface ApiGateWayService {
 
     Mono<ResponseEntity<CmnResponseVo>> api_doHttpRequest(ServerHttpRequest request, Mono<byte[]> body) throws IOException;
 
-    Boolean isAuth(ServerHttpRequest request);
-
     String getApiUrl(String serviceName);
 
     void setApiUrl(String serviceName, String apiUrl);

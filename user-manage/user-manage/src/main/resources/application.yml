@@ -2,6 +2,17 @@ server:
   port: 5000
 
 spring:
+  security:
+    oauth2:
+      authorization-server:
+        issuer: http://127.0.0.1:4000
+        endpoint:
+          token:
+            path: /oauth2/token
+        jwt:
+          token-ttl: 3600  # 1시간
+          refresh-token-ttl: 2592000  # 30일
+
   datasource:
     url: ${url}
     driver-class-name: org.mariadb.jdbc.Driver

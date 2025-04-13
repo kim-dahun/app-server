@@ -5,6 +5,7 @@ import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
+import com.service.core.constants.ApiConstants;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
@@ -18,12 +19,20 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.core.oidc.OidcScopes;
+import org.springframework.security.oauth2.jwt.JwtClaimsSet;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.server.authorization.OAuth2TokenType;
+import org.springframework.security.oauth2.server.authorization.authentication.OAuth2AuthorizationGrantAuthenticationToken;
 import org.springframework.security.oauth2.server.authorization.client.InMemoryRegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
+import org.springframework.security.oauth2.server.authorization.settings.OAuth2TokenFormat;
+import org.springframework.security.oauth2.server.authorization.settings.TokenSettings;
+import org.springframework.security.oauth2.server.authorization.token.JwtEncodingContext;
+import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenCustomizer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
@@ -33,26 +42,78 @@ import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.Map;
 import java.util.UUID;
+
+import static com.service.core.constants.ApiConstants.*;
 
 @Component
 @RequiredArgsConstructor
 public class AuthServerConfig {
 
 
-    private final PasswordEncoder passwordEncoder;
 
     @Bean
-    public RegisteredClientRepository registeredClientRepository() {
+    public RegisteredClientRepository registeredClientRepository(PasswordEncoder passwordEncoder) {
         RegisteredClient apiGatewayClient = RegisteredClient.withId("gateway-1")
                 .clientId("api-gateway")
                 .clientSecret(passwordEncoder.encode("gateway-secret"))
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
                 .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
                 .scope("api.access")
+                // 토큰 설정 추가
+                .tokenSettings(TokenSettings.builder()
+                        .accessTokenTimeToLive(Duration.ofHours(1))    // 토큰 유효기간
+                        .accessTokenFormat(OAuth2TokenFormat.SELF_CONTAINED)    // JWT 형식
+                        .reuseRefreshTokens(true)
+                        .refreshTokenTimeToLive(Duration.ofDays(1))   // 리프레시 토큰 유효기간
+                        .build())
+                .clientSettings(ClientSettings.builder()
+                        .requireAuthorizationConsent(false)    // 권한 동의 화면 스킵
+                        .requireProofKey(false)
+                        .build())
                 .build();
 
         return new InMemoryRegisteredClientRepository(apiGatewayClient);
+    }
+
+    // JWT 토큰 설정
+    @Bean
+    public OAuth2TokenCustomizer<JwtEncodingContext> tokenCustomizer() {
+
+
+        return context -> {
+
+
+            OAuth2AuthorizationGrantAuthenticationToken authorizationGrant =
+                    (OAuth2AuthorizationGrantAuthenticationToken) context.getAuthorizationGrant();
+
+            Map<String, Object> parameters = authorizationGrant.getAdditionalParameters();
+
+            // 파라미터에서 userId와 comCd 추출
+            String userId = (String) parameters.getOrDefault("userId", "");
+            String comCd = (String) parameters.getOrDefault("comCd", "");
+
+
+            if (context.getTokenType() == OAuth2TokenType.ACCESS_TOKEN) {
+                context.getClaims().claims(claims -> {
+                    claims.put("client_id", context.getRegisteredClient().getClientId());
+                    claims.put("grant_type", context.getAuthorizationGrantType().getValue());
+                    claims.put("scope", context.getAuthorizedScopes());
+                    claims.put("issued_at", Instant.now().toString());
+                    claims.put("userId", userId);
+                    claims.put("comCd", comCd);
+                });
+            }
+        };
+    }
+
+    // JWT 설정
+    @Bean
+    public JwtDecoder jwtDecoder(JWKSource<SecurityContext> jwkSource) {
+        return OAuth2AuthorizationServerConfiguration.jwtDecoder(jwkSource);
     }
 
     @Bean
@@ -101,7 +162,11 @@ public class AuthServerConfig {
     @Bean
     public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
-                .authorizeHttpRequests((auth) -> auth.anyRequest().authenticated())
+                .authorizeHttpRequests((auth) ->
+                        auth
+                                .requestMatchers(API_BASE+ API_AUTH_MANAGE+"/sign-up").permitAll()
+                                .requestMatchers(API_BASE+ API_AUTH_MANAGE+"/login").permitAll()
+                        .anyRequest().authenticated())
                 .formLogin(Customizer.withDefaults());
 
         return httpSecurity.build();
