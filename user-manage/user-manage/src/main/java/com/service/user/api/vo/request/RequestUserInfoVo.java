@@ -17,6 +17,7 @@ import java.util.List;
 public class RequestUserInfoVo extends CmnRequestVo {
 
     List<UserInfoVo> executeList;
+    String status;
 
 
 }

@@ -1,4 +1,4 @@
-package com.service.user.api;
+package com.service.user.api.service;
 
 import com.service.user.api.vo.request.RequestUserInfoVo;
 import com.service.user.api.vo.request.RequestUserVo;

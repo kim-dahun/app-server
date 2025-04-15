@@ -5,10 +5,13 @@ import com.service.user.entity.id.UserAuthId;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Builder
 @AllArgsConstructor
@@ -40,10 +43,18 @@ public class UserAuth extends CmnBaseCUDEntity implements UserDetails {
     @Column(name = "STATUS", length = 100)
     private String status;
 
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Builder.Default
+    private List<String> roles = new ArrayList<>();
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        return this.roles.stream()
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
     }
+
+
 
     @Override
     public String getPassword() {

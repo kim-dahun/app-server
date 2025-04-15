@@ -16,6 +16,7 @@ public class UserInfoVo {
     private String comCd;
     private UserAuth userAuth;
     private String userName;
+    private String userPassword;
     private String phone;
     private String email;
     private String userType;
