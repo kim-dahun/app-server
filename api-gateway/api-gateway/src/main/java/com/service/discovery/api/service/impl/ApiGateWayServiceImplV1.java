@@ -1,15 +1,16 @@
 package com.service.discovery.api.service.impl;
 
+import com.service.core.config.webMvc.GlobalRestControllerAdvice;
 import com.service.core.exception.CustomRuntimeException;
 import com.service.core.service.MessageService;
 import com.service.core.util.ConverterUtils;
+import com.service.core.util.NativeQueryUtils;
 import com.service.core.vo.response.CmnResponseVo;
 import com.service.discovery.api.service.ApiGateWayService;
 import com.service.discovery.constants.HttpConstants;
 import com.service.discovery.entity.RequestHistory;
 import com.service.discovery.repository.RequestHistoryRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpCookie;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.server.reactive.ServerHttpRequest;
@@ -43,7 +44,6 @@ public class ApiGateWayServiceImplV1 implements ApiGateWayService {
 
     private final String AUTH_MANAGE_SERVER = "auth-manage-server";
 
-    private final MessageService messageService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -51,7 +51,7 @@ public class ApiGateWayServiceImplV1 implements ApiGateWayService {
         String[] urlPatterns = request.getURI().getPath().split("/");
         String langCode = request.getHeaders().getFirst(HttpConstants.ACCEPT_LANGUAGE).contains("ko") ? KO : EN;
         if(isBadRequest(urlPatterns)){
-            throw new CustomRuntimeException(messageService.getMessage(langCode,null, SEARCH_FAIL),404);
+            throw new CustomRuntimeException(SEARCH_FAIL,404);
         }
         String userAgent = request.getHeaders().getFirst(USER_AGENT);
         String clientIp = request.getHeaders().getFirst(X_FORWARDED_FOR);
@@ -112,7 +112,7 @@ public class ApiGateWayServiceImplV1 implements ApiGateWayService {
 
         return requestHistoryRepository.save(
                         RequestHistory.builder()
-                                .requestId(timekey)
+                                .requestId(timekey+"_"+ip)
                                 .clientIp(ip)
                                 .clientDeviceNm(deviceNm)
                                 .requestEndPoint(endPoint)
@@ -127,8 +127,8 @@ public class ApiGateWayServiceImplV1 implements ApiGateWayService {
     @Override
     public boolean isBadRequest(String[] urlPatterns) {
         if(urlPatterns.length < 2){
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 }

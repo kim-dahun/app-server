@@ -1,30 +1,26 @@
-package com.service.core.config.webMvc;
+package com.service.discovery.config;
 
-import ch.qos.logback.core.joran.spi.HttpUtil;
-import jakarta.servlet.http.HttpServletRequest;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.server.ServerHttpRequest;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@ControllerAdvice
 @Slf4j
-@RestControllerAdvice
-@ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
-public class GlobalRestControllerAdvice {
+public class GlobalRestControllerAdviceWebFlux {
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<Map<String, String>> exceptionHandler(Exception e, HttpServletRequest httpServletRequest){
+    public ResponseEntity<Map<String, String>> exceptionHandler(Exception e, ServerHttpRequest httpRequest){
 
         log.error("System Error {}", e.getMessage());
 
-        String message = System.lineSeparator() + " Request URI : " + httpServletRequest.getRequestURI()
-                + System.lineSeparator() + " Request Method : " + httpServletRequest.getMethod()
+        String message = System.lineSeparator() + " Request URI : " + httpRequest.getURI()
+                + System.lineSeparator() + " Request Method : " + httpRequest.getMethod()
                 + System.lineSeparator() + " System Message : " + e.getMessage();
 
         log.info(message);
@@ -36,6 +32,5 @@ public class GlobalRestControllerAdvice {
         HttpStatus httpStatus = e instanceof RuntimeException ? HttpStatus.INTERNAL_SERVER_ERROR : HttpStatus.BAD_REQUEST;
         return ResponseEntity.status(httpStatus).body(responseMap);
     }
-
 
 }

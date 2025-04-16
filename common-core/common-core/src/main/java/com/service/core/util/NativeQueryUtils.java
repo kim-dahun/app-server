@@ -5,6 +5,7 @@ import com.service.core.exception.CustomDocsParserException;
 import com.service.core.model.NativeQueryUtilsModel;
 import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -25,6 +26,7 @@ import java.util.*;
 
 @RequiredArgsConstructor
 @Component
+@ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 public class NativeQueryUtils implements NativeQueryUtilsModel {
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;

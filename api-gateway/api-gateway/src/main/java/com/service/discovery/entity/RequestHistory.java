@@ -15,13 +15,11 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Table("REQUEST_HISTORY")
-
 public class RequestHistory {
 
     @Id
     private String requestId;
 
-    @Id
     private String clientIp;
 
     private String requestType;

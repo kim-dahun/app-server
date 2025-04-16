@@ -64,9 +64,6 @@ spring:
 #      minimum-idle: 5
 #      max-lifetime: 1800000 #30min
 #      idle-timeout: 600000 #10min
-  messages:
-    basename: messages
-    encoding: UTF-8
 
 #  jpa:
 #    hibernate:
