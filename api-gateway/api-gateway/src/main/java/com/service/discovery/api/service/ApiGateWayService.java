@@ -12,7 +12,7 @@ import java.util.Map;
 
 public interface ApiGateWayService {
 
-
+    Mono<ResponseEntity<CmnResponseVo>> api_getServerList(ServerHttpRequest request);
 
     Mono<ResponseEntity<CmnResponseVo>> api_doHttpRequest(ServerHttpRequest request, Mono<byte[]> body) throws IOException;
 
@@ -24,4 +24,5 @@ public interface ApiGateWayService {
 
     boolean isBadRequest(String[] urlPatterns);
 
+    void deleteApiUrl(String string, String string1);
 }

@@ -11,6 +11,7 @@ import com.service.discovery.constants.HttpConstants;
 import com.service.discovery.entity.RequestHistory;
 import com.service.discovery.repository.RequestHistoryRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.server.reactive.ServerHttpRequest;
@@ -32,6 +33,7 @@ import static com.service.discovery.constants.HttpConstants.X_FORWARDED_FOR;
 import static org.springframework.http.HttpHeaders.*;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class ApiGateWayServiceImplV1 implements ApiGateWayService {
 
@@ -42,8 +44,13 @@ public class ApiGateWayServiceImplV1 implements ApiGateWayService {
 
     private final RequestHistoryRepository requestHistoryRepository;
 
-    private final String AUTH_MANAGE_SERVER = "auth-manage-server";
 
+    @Override
+    public Mono<ResponseEntity<CmnResponseVo>> api_getServerList(ServerHttpRequest request) {
+        CmnResponseVo responseVo = new CmnResponseVo();
+        responseVo.setCommonResultMap(servicePortMap);
+        return Mono.just(ResponseEntity.ok(responseVo));
+    }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -57,10 +64,13 @@ public class ApiGateWayServiceImplV1 implements ApiGateWayService {
         String clientIp = request.getHeaders().getFirst(X_FORWARDED_FOR);
         String serviceName = urlPatterns[2];
         String baseUrl = getApiUrl(serviceName);
+        if(baseUrl == null){
+            return Mono.error(new CustomRuntimeException(SEARCH_FAIL,404));
+        }
         WebClient webClient = webClientBuilder
                 .baseUrl(baseUrl)
                 .build();
-        urlPatterns[0] = "";
+        urlPatterns[0] = baseUrl;
         String fullPath = String.join("/",urlPatterns);
         String token = "";
         HttpHeaders headers = request.getHeaders();
@@ -98,10 +108,11 @@ public class ApiGateWayServiceImplV1 implements ApiGateWayService {
     public void setApiUrl(String serviceName, String apiUrl) {
         List<String> ports = servicePortMap.get(serviceName);
         if(ports==null){
-            return;
+            ports = new LinkedList<>();
         }
         ports.add(apiUrl);
         servicePortMap.put(serviceName, ports);
+        log.info("ServerList : \n\r {}", servicePortMap);
     }
 
     @Override
@@ -130,5 +141,15 @@ public class ApiGateWayServiceImplV1 implements ApiGateWayService {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void deleteApiUrl(String serviceName, String serviceUrl) {
+        List<String> urlList = servicePortMap.get(serviceName);
+        if(urlList==null){
+            return;
+        }
+        urlList.removeIf(url -> url.equals(serviceUrl));
+        log.info("ServerList : \n\r {}", servicePortMap);
     }
 }

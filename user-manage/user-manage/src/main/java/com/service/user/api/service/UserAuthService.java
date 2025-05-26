@@ -5,12 +5,10 @@ import com.service.user.api.vo.request.RequestUserVo;
 import com.service.user.api.vo.response.ResponseUserInfoVo;
 import org.springframework.http.ResponseEntity;
 
-public interface UserService {
+public interface UserAuthService {
 
+    ResponseEntity<ResponseUserInfoVo> api_signIn(RequestUserInfoVo requestUserInfoVo);
 
-
-    ResponseEntity<ResponseUserInfoVo> api_updateUserInfo(RequestUserInfoVo requestUserInfoVo);
-
-    ResponseEntity<ResponseUserInfoVo> api_changeStatus(RequestUserInfoVo requestUserInfoVo);
+    ResponseEntity<ResponseUserInfoVo> api_login(RequestUserVo requestUserVo);
 
 }
