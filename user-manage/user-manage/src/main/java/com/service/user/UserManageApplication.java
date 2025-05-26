@@ -45,12 +45,23 @@ public class UserManageApplication implements ApplicationListener<ApplicationEve
             HttpRequest deleteServerRequest = HttpRequest.newBuilder()
                     .uri(URI.create("http://127.0.0.1:4000/api/delete-server"))
                     .header("Content-Type", "application/json")
-                    .header("Service-Name", ApiConstants.API_ACCOUNT_MANAGE)
-                    .header("Service-Url", "http://localhost:" + currentPort + ApiConstants.API_ACCOUNT_MANAGE)
+                    .header("Service-Name", ApiConstants.API_USER_MANAGE.substring(1))
+                    .header("Service-Url", "http://localhost:" + currentPort + ApiConstants.API_USER_MANAGE)
                     .DELETE()
                     .build();
 
             HttpResponse<String> response = httpClient.send(deleteServerRequest, HttpResponse.BodyHandlers.ofString());
+            log.info("responseCode : {}", response.statusCode());
+
+            deleteServerRequest = HttpRequest.newBuilder()
+                    .uri(URI.create("http://127.0.0.1:4000/api/delete-server"))
+                    .header("Content-Type", "application/json")
+                    .header("Service-Name", ApiConstants.API_AUTH_MANAGE.substring(1))
+                    .header("Service-Url", "http://localhost:" + currentPort + ApiConstants.API_AUTH_MANAGE)
+                    .DELETE()
+                    .build();
+
+            response = httpClient.send(deleteServerRequest, HttpResponse.BodyHandlers.ofString());
             log.info("responseCode : {}", response.statusCode());
 
         } catch (Exception e) {
@@ -70,7 +81,7 @@ public class UserManageApplication implements ApplicationListener<ApplicationEve
                 HttpRequest setServerRequest = HttpRequest.newBuilder()
                         .uri(URI.create("http://127.0.0.1:4000/api/set-server"))
                         .header("Content-Type", "application/json")
-                        .header("Service-Name", ApiConstants.API_AUTH_MANAGE)
+                        .header("Service-Name", ApiConstants.API_AUTH_MANAGE.substring(1))
                         .header("Service-Url", "http://localhost:" + port + ApiConstants.API_AUTH_MANAGE)
                         .POST(HttpRequest.BodyPublishers.noBody())
                         .build();
@@ -81,7 +92,7 @@ public class UserManageApplication implements ApplicationListener<ApplicationEve
                 setServerRequest = HttpRequest.newBuilder()
                         .uri(URI.create("http://127.0.0.1:4000/api/set-server"))
                         .header("Content-Type", "application/json")
-                        .header("Service-Name", ApiConstants.API_USER_MANAGE)
+                        .header("Service-Name", ApiConstants.API_USER_MANAGE.substring(1))
                         .header("Service-Url", "http://localhost:" + port + ApiConstants.API_USER_MANAGE)
                         .POST(HttpRequest.BodyPublishers.noBody())
                         .build();

@@ -56,12 +56,25 @@ public class ApiGateWayServiceImplV1 implements ApiGateWayService {
     @Transactional(rollbackFor = Exception.class)
     public Mono<ResponseEntity<CmnResponseVo>> api_doHttpRequest(ServerHttpRequest request, Mono<byte[]> body) throws IOException {
         String[] urlPatterns = request.getURI().getPath().split("/");
-        String langCode = request.getHeaders().getFirst(HttpConstants.ACCEPT_LANGUAGE).contains("ko") ? KO : EN;
+        Object acceptLanguage = request.getHeaders().getFirst(HttpConstants.ACCEPT_LANGUAGE);
+        String langCode = KO;
+        if (acceptLanguage != null) {
+            langCode = acceptLanguage.toString().contains("ko") ? KO : EN;
+        }
+
         if(isBadRequest(urlPatterns)){
             throw new CustomRuntimeException(SEARCH_FAIL,404);
         }
         String userAgent = request.getHeaders().getFirst(USER_AGENT);
-        String clientIp = request.getHeaders().getFirst(X_FORWARDED_FOR);
+        // 클라이언트 IP 얻기
+        String clientIp = request.getRemoteAddress() != null ?
+                request.getRemoteAddress().getAddress().getHostAddress() :
+                request.getHeaders().getFirst(X_FORWARDED_FOR);
+
+        // IP가 없는 경우 기본값 설정
+        if (clientIp == null || clientIp.isEmpty()) {
+            clientIp = "127.0.0.1";
+        }
         String serviceName = urlPatterns[2];
         String baseUrl = getApiUrl(serviceName);
         if(baseUrl == null){
@@ -74,18 +87,41 @@ public class ApiGateWayServiceImplV1 implements ApiGateWayService {
         String fullPath = String.join("/",urlPatterns);
         String token = "";
         HttpHeaders headers = request.getHeaders();
-        return api_insertRequestHistory(clientIp, userAgent, request.getMethod().name(), fullPath, token)
-                .flatMap(inserted -> {
-                    if (!inserted) {
-                        return Mono.error(new CustomRuntimeException("데이터 전달 중 에러 발생"));
-                    }
+        String finalClientIp = clientIp;
+        return Mono.defer(() ->
+                api_insertRequestHistory(finalClientIp, userAgent, request.getMethod().name(), fullPath, token)
+                        .flatMap(inserted -> {
+                            if (!inserted) {
+                                return Mono.error(new CustomRuntimeException("데이터 전달 중 에러 발생"));
+                            }
 
-                    return webClient.method(request.getMethod())
-                            .uri(fullPath)
-                            .headers(httpHeaders -> httpHeaders.addAll(headers))
-                            .body(body != null ? BodyInserters.fromPublisher(body, byte[].class) : BodyInserters.empty())
-                            .exchangeToMono(response -> response.toEntity(CmnResponseVo.class));
-                });
+                            return webClient.method(request.getMethod())
+                                    .uri(fullPath)
+                                    .headers(httpHeaders -> httpHeaders.addAll(headers))
+                                    .body(body != null ? BodyInserters.fromPublisher(body, byte[].class) : BodyInserters.empty())
+                                    .exchangeToMono(response -> {
+                                        log.info("response: {}", response.statusCode());
+                                        if (response.statusCode().is2xxSuccessful()) {
+                                            return response.toEntity(CmnResponseVo.class)
+                                                    .switchIfEmpty(Mono.just(ResponseEntity.ok(new CmnResponseVo()))); // 빈 응답일 경우 기본 응답 반환
+                                        } else {
+                                            return Mono.error(new CustomRuntimeException("서버 응답 오류: " + response.statusCode()));
+                                        }
+                                    })
+                                    .onErrorResume(e -> {
+                                        log.error("Error in WebClient exchange: ", e);
+                                        CmnResponseVo errorResponse = new CmnResponseVo();
+                                        errorResponse.setMessage(e.getMessage());
+                                        return Mono.just(ResponseEntity.internalServerError().body(errorResponse));
+                                    });
+                        })
+                        .onErrorResume(e -> {
+                            log.error("Error during request processing: ", e);
+                            CmnResponseVo errorResponse = new CmnResponseVo();
+                            errorResponse.setMessage(e.getMessage());
+                            return Mono.just(ResponseEntity.internalServerError().body(errorResponse));
+                        })
+        );
 
     }
 
@@ -121,18 +157,32 @@ public class ApiGateWayServiceImplV1 implements ApiGateWayService {
         LocalDateTime now = LocalDateTime.now();
         String timekey = ConverterUtils.getTimeKeyMillSecond(now);
 
-        return requestHistoryRepository.save(
-                        RequestHistory.builder()
-                                .requestId(timekey+"_"+ip)
-                                .clientIp(ip)
-                                .clientDeviceNm(deviceNm)
-                                .requestEndPoint(endPoint)
-                                .requestType(method)
-                                .requestToken(token)
-                                .requestDateTime(now)
-                                .build())
+        RequestHistory requestHistory = RequestHistory.builder()
+                .requestId(timekey+"_"+ip)
+                .clientIp(ip)
+                .clientDeviceNm(deviceNm)
+                .requestEndPoint(endPoint)
+                .requestType(method)
+                .requestToken(token)
+                .requestDateTime(now)
+                .build();
+
+        log.debug("Attempting to save request history: {}", requestHistory);
+
+        return requestHistoryRepository.save(requestHistory)
+                .doOnSubscribe(subscription ->
+                        log.debug("Starting save operation for request ID: {}", requestHistory.getRequestId()))
+                .doOnSuccess(saved ->
+                        log.info("Successfully saved request history: {}", saved))
+                .doOnError(error ->
+                        log.error("Error saving request history: {}", error.getMessage()))
                 .map(saved -> true)
-                .onErrorResume(e -> Mono.just(false));
+                .onErrorResume(e -> {
+                    log.error("Failed to save request history", e);
+                    return Mono.just(false);
+                })
+                .doFinally(signalType ->
+                        log.debug("Save operation completed with signal: {}", signalType));
     }
 
     @Override

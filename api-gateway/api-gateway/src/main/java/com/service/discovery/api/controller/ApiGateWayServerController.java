@@ -22,8 +22,8 @@ public class ApiGateWayServerController {
 
     @PostMapping("/set-server")
     public void api_setServer(ServerHttpRequest request) {
-        Object serviceName = request.getHeaders().get("Service-name");
-        Object serviceUrl = request.getHeaders().get("Service-url");
+        Object serviceName = request.getHeaders().getFirst("Service-name");
+        Object serviceUrl = request.getHeaders().getFirst("Service-url");
         if(serviceName != null && serviceUrl != null) {
             apiGateWayService.setApiUrl(serviceName.toString(), serviceUrl.toString());
         }
@@ -31,8 +31,8 @@ public class ApiGateWayServerController {
 
     @DeleteMapping("/delete-server")
     public void api_deleteServer(ServerHttpRequest request) {
-        Object serviceName = request.getHeaders().get("Service-name");
-        Object serviceUrl = request.getHeaders().get("Service-url");
+        Object serviceName = request.getHeaders().getFirst("Service-name");
+        Object serviceUrl = request.getHeaders().getFirst("Service-url");
         if(serviceName != null && serviceUrl != null) {
             apiGateWayService.deleteApiUrl(serviceName.toString(), serviceUrl.toString());
         }

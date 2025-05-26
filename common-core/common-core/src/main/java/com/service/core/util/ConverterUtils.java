@@ -13,11 +13,13 @@ public class ConverterUtils {
     private static final String REGEX = "[^0-9]";
 
     public static String getTimeKeySecond(LocalDateTime now){
-        return now.toString().replace(REGEX,"").substring(0,14);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+        return now.format(formatter);
     }
 
     public static String getTimeKeyMillSecond(LocalDateTime now){
-        return now.toString().replace(REGEX,"").substring(0,17);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS");
+        return now.format(formatter);
     }
 
     public static String getTimeKeyDay(LocalDateTime now){
@@ -25,7 +27,8 @@ public class ConverterUtils {
     }
 
     public static String getTimeKeyMinute(LocalDateTime now){
-        return now.toString().replace(REGEX,"").substring(0,12);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
+        return now.format(formatter);
     }
 
     public static String getDateTimeStringByFormat(LocalDateTime dateTime, String formatType){

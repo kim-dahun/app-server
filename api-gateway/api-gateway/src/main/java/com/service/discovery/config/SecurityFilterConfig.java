@@ -27,6 +27,8 @@ public class SecurityFilterConfig {
                 .build();
     }
 
+    //.hasAuthority("api.access")
+
     @Bean
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
         return http
@@ -35,12 +37,13 @@ public class SecurityFilterConfig {
                         .jwt(jwt -> jwt
                                 .jwtDecoder(jwtDecoder())))
                 .authorizeExchange(exchanges -> exchanges
+                        .pathMatchers("/**").permitAll()
                         .pathMatchers(API_BASE+API_USER_MANAGE+ "/sign-up",API_BASE+API_USER_MANAGE+"/login").permitAll()
-                        .pathMatchers( API_BASE+API_ACCOUNT_MANAGE +"/**").hasAuthority("api.access")
-                        .pathMatchers(API_BASE+API_USER_MANAGE+"/**").hasAuthority("api.access")
-                        .pathMatchers(API_BASE+"/set-server/**").permitAll()
-                        .pathMatchers(API_BASE+"/get-server/**").permitAll()
-                        .pathMatchers(API_BASE+"/delete-server/**").permitAll()
+//                        .pathMatchers( API_BASE+API_ACCOUNT_MANAGE +"/**").permitAll()
+//                        .pathMatchers(API_BASE+API_USER_MANAGE+"/**").permitAll()
+//                        .pathMatchers(API_BASE+"/set-server/**").permitAll()
+//                        .pathMatchers(API_BASE+"/get-server/**").permitAll()
+//                        .pathMatchers(API_BASE+"/delete-server/**").permitAll()
                         .anyExchange().authenticated()
                 )
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)

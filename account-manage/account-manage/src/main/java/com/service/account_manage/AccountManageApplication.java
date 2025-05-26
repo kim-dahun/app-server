@@ -45,7 +45,7 @@ public class AccountManageApplication  implements ApplicationListener<Applicatio
                 HttpRequest deleteServerRequest = HttpRequest.newBuilder()
                         .uri(URI.create("http://127.0.0.1:4000/api/delete-server"))
                         .header("Content-Type", "application/json")
-                        .header("Service-Name", ApiConstants.API_ACCOUNT_MANAGE)
+                        .header("Service-Name", ApiConstants.API_ACCOUNT_MANAGE.substring(1))
                         .header("Service-Url", "http://localhost:" + currentPort + ApiConstants.API_ACCOUNT_MANAGE)
                         .DELETE()
                         .build();
@@ -70,7 +70,7 @@ public class AccountManageApplication  implements ApplicationListener<Applicatio
                 HttpRequest setServerRequest = HttpRequest.newBuilder()
                         .uri(URI.create("http://127.0.0.1:4000/api/set-server"))
                         .header("Content-Type", "application/json")
-                        .header("Service-Name", ApiConstants.API_ACCOUNT_MANAGE)
+                        .header("Service-Name", ApiConstants.API_ACCOUNT_MANAGE.substring(1))
                         .header("Service-Url", "http://localhost:" + port + ApiConstants.API_ACCOUNT_MANAGE)
                         .POST(HttpRequest.BodyPublishers.noBody())
                         .build();
